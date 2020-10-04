@@ -21,8 +21,7 @@ int main(int args,char* argv[])
             cout<<dirp->d_name<<endl;
         }
     }
-
-    cout<<"hello world"<<endl;
+ 
     return 0;
     
 }
