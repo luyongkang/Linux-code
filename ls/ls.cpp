@@ -22,6 +22,7 @@ int main(int args,char* argv[])
         }
     }
 
+    cout<<"hello world"<<endl;
     return 0;
     
 }
