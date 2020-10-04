@@ -3,12 +3,15 @@
 #include<string.h>
 #include<unistd.h>
 
+static void sig_int(int);
 using namespace std;
 int main()
 {
     char buf[100];
     pid_t pid;
     int status;
+    if(signal(SIGINT,sig_int)==SIG_ERR)
+        cerr<<"signal error"  <<endl;
     cout<<"&& ";
     while(fgets(buf,100,stdin)!=nullptr)
     {
@@ -23,12 +26,21 @@ int main()
         {
             execlp(buf,buf,static_cast<char*>(0));
             cerr<<"couldn't execute: "<<buf<<endl;
-            exit(127);
+            return 127;
         }
+
 
         if((pid==waitpid(pid,&status,0))<0)
             cerr<<"waitpid error"<<endl;
 
         cout<<"&& ";
     }
+
+    return 0
+}
+
+void sig_int(int signo)
+{
+    cout<<"interrupt"<<signo<<endl;
+    return;
 }
