@@ -21,7 +21,8 @@ int main(int args,char* argv[])
             cout<<dirp->d_name<<endl;
         }
     }
-    system("pause");
+
+    system("date");
     return 0;
     
 }
