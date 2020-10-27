@@ -6,12 +6,14 @@ using namespace std;
 void *thrA(void *);
 void *thrB(void *);
 void *thrC(void *);
-
+pthread_mutex_t *pa = new pthread_mutex_t();
 pthread_mutex_t A = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t B = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t C = PTHREAD_MUTEX_INITIALIZER;
 int main()
 {
+	pthread_mutex_init(pa, nullptr);
+	pthread_mutex_lock(pa);
 	pthread_mutex_lock(&A);
 	pthread_mutex_lock(&B);
 	pthread_mutex_lock(&C);
@@ -38,13 +40,16 @@ int main()
 	err = pthread_join(tidB, nullptr);
 	err = pthread_join(tidC, nullptr);
 	pthread_mutex_lock(&A);
+	pthread_mutex_unlock(pa);
+	pthread_mutex_destroy(pa);
+	free(pa);
 	cout << endl;
 	return 0;
 }
 
 void* thrA(void* arg)
 {
-	for (int i = 0; i < 10;i++)
+	for (int i = 0; i < 10; i++)
 	{
 		pthread_mutex_lock(&A);
 		cout << "A";
