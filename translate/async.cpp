@@ -8,6 +8,15 @@ using namespace std;
 
 char translate(char c);
 
+
+int main(int argc,char* argv[])
+{
+	if(argc!=3)
+	{
+		cerr << "commands usage: asyncexe inputfile outputfile" << endl;
+	}
+	
+}
 char translate(char c)
 {
 	if(isalpha(c))
@@ -29,4 +38,6 @@ char translate(char c)
 			c += 13;
 		}
 	}
+
+	return c;
 }
