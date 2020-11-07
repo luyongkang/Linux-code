@@ -4,4 +4,4 @@ sync:sync.cpp
 
 .PHONY:async
 async:async.cpp
-	g++ -g async.cpp -o asyncexe
+	g++ -g async.cpp -o asyncexe -lrt
