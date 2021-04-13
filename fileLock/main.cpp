@@ -1,5 +1,8 @@
 //使用文件在不同进程间实现锁功能
+#include<sys/mman.h>
+#include<pthread.h>
 #include<cstdio>
+#include<iostream>
 #include<cstring>
 #include<cstdlib>
 #include<unistd.h>
@@ -61,3 +64,42 @@ void myLockRelease()//解锁文件
 	}
 }
 
+
+
+//使用线程上锁实现不同进程间的锁
+static pthread_mutex_t *mptr;
+
+void myLockInit2(char* pathname )
+{
+	int fd;
+	pthread_mutexattr_t mattr;
+
+	fd = open("dev/zero", O_RDWR, 0);
+
+	mptr = static_cast<pthread_mutex_t*>(mmap(0, sizeof(pthread_mutex_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+
+	close(fd);//mptr已经指向了内存空间，关闭描述符不影响内存空间的使用
+
+	pthread_mutexattr_init(&mattr);
+	pthread_mutexattr_setpshared(&mattr, PTHREAD_PROCESS_SHARED);//想要在进程间使用互斥锁必须要设置进程间共享标志
+	pthread_mutex_init(mptr, &mattr);
+}
+
+
+void myLockWait2()
+{
+	if(pthread_mutex_lock(mptr)<0)
+	{
+		std::cerr << "pthread_mutex_lock error" << std::endl;
+		exit(1);
+	}
+}
+
+void myLockRelease()
+{
+	if(pthread_mutex_unlock(mptr)<0)
+	{
+		std::cerr << "pthread_mutex_unlock error" << std::endl;
+		exit(1);
+	}
+}
